@@ -1,4 +1,19 @@
-<?php
+ <?php 
+
+session_start();
+if(!isset($_SESSION['admin'])){
+    header("location:index.php");
+}
+include_once './header.php';
+
+
+include_once './database.php';
+if($_SESSION['admin']=="admin"){
+  
+}
+else{
+   
+}
 if (isset($_POST['form_teacher'])) {
 
     try {
@@ -31,8 +46,11 @@ if (isset($_POST['form_teacher'])) {
           if (empty($_POST['t_faculty'])) {
             throw new Exception("Teacher faculty not be empty.");
         } 
+          if (empty($_POST['t_fb_link'])) {
+            throw new Exception("Facebook Link not be empty.");
+        } 
        
-         if (empty($_FILES['t_image'])) {
+         if (empty($_FILES['t_image_url'])) {
             throw new Exception("Teacher image not be empty.");
         }
         
@@ -42,22 +60,25 @@ if (isset($_POST['form_teacher'])) {
 //        $result = $statement->fetchAll();
 //        foreach ($result as $row)
 //            $new_id = $row[10];
+     
 
-
-        $target_dir = "/xampp/htdocs/pstu/uploads/";
-        $file_basename = basename($_FILES["t_image"]["name"]);
+       
+        $file_basename = basename($_FILES["t_image_url"]["name"]);
         $file_ext = pathinfo($file_basename, PATHINFO_EXTENSION);
-        $up_filename = $file_basename . "." . $file_ext;
-//                $img_url = "http://192.168.43.197/admin/uploads/".$up_filename;
-
+        $t_name = strtolower(str_replace(" ","",$_POST['t_name']));
+        $up_filename = $t_name . "_" . get_millis() . "." . $file_ext;
+        $target_dir = dirname(__FILE__) . "/uploads/" . $up_filename;
+       $img_url = "http://agramonia.com/pstuian/uploads/".$up_filename;
+          
+      
         if (($file_ext != "png") && ($file_ext != "jpg") && ($file_ext != "jpeg") && ($file_ext != "gif"))
             throw new Exception("Only jpg, jpeg, png and gif format images are allowed to upload.");
 
-        move_uploaded_file($_FILES["t_image"]["tmp_name"], $target_dir . $up_filename);
+        move_uploaded_file($_FILES["t_image_url"]["tmp_name"], $target_dir . $file_basename);
 
 
-        $statement = $db->prepare("INSERT INTO teacher (name, rank, status, contact, address, email, department,faculty,image) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)");
-        $statement->execute(array($_POST['t_name'], $_POST['t_rank'], $_POST['t_status'],$_POST['t_contact'],$_POST['t_address'],$_POST['t_email'],$_POST['t_department'],$_POST['t_faculty'], $up_filename));
+        $statement = $db->prepare("INSERT INTO teacher (name, designation, status, phone,linked_in, address, email, department,faculty,fb_link,image_url) VALUES(?,?, ?, ?, ?, ?, ?, ?, ?, ?,?)");
+        $statement->execute(array($_POST['t_name'], $_POST['t_rank'], $_POST['t_status'],$_POST['t_contact'],$_POST['t_linked_in'],$_POST['t_address'],$_POST['t_email'],$_POST['t_department'],$_POST['t_faculty'],$_POST['t_fb_link'], $img_url));
 
 
         $success_message = "Teacher Added Successfully.";
@@ -65,7 +86,13 @@ if (isset($_POST['form_teacher'])) {
         $error_message = $e->getMessage();
     }
 }
+function get_millis(){
+  list($usec, $sec) = explode(' ', microtime());
+  return (int) ((int) $sec * 1000 + ((float) $usec * 1000));
+}
+
 ?>
+
 
 <?php
 include_once './header.php';
@@ -100,7 +127,11 @@ if (isset($success_message)) {
                 </div>
 
                 <div class="form-group">
-                    <input type="file" name="t_image" class="form-control"/>
+                    <input type="file" name="t_image_url" class="form-control"/>
+                </div>
+                
+                 <div class="form-group">
+                    <input type="text" name="t_linked_in" class="form-control" placeholder="Teacher Linked In"/>
                 </div>
 
                 <div class="form-group">
@@ -122,6 +153,9 @@ if (isset($success_message)) {
                   <div class="form-group">
                     <input type="text" name="t_faculty"  class="form-control" placeholder="Teacher Faculty"/>
                 </div>
+                <div class="form-group">
+                    <input type="text" name="t_fb_link"  class="form-control" placeholder="FB Link"/>
+                </div>
 
                 <div class="form-group">
                     <input type="submit" name="form_teacher" value="Save" class="btn btn-primary"/>
@@ -131,4 +165,7 @@ if (isset($success_message)) {
     </div>
 
 </div>
+
+
+
 <?php include_once './footer.php'; ?>

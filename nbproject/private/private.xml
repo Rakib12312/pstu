@@ -3,13 +3,16 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/xampp/htdocs/pstu/student.php</file>
-            <file>file:/C:/xampp/htdocs/pstu/index.php</file>
-            <file>file:/C:/xampp/htdocs/pstu/database.php</file>
+            <file>file:/C:/xampp/htdocs/pstu/edit_information.php</file>
+            <file>file:/C:/xampp/htdocs/pstu/delete_teacher.php</file>
+            <file>file:/C:/xampp/htdocs/pstu/delete_student.php</file>
+            <file>file:/C:/xampp/htdocs/pstu/edit_teacher.php</file>
+            <file>file:/C:/xampp/htdocs/pstu/delete_employee.php</file>
+            <file>file:/C:/xampp/htdocs/pstu/details_employee.php</file>
+            <file>file:/C:/xampp/htdocs/pstu/edit_employee.php</file>
             <file>file:/C:/xampp/htdocs/pstu/header.php</file>
-            <file>file:/C:/xampp/htdocs/pstu/footer.php</file>
-            <file>file:/C:/xampp/htdocs/pstu/teacher_insert.php</file>
-            <file>file:/C:/xampp/htdocs/pstu/student_show.php</file>
+            <file>file:/C:/xampp/htdocs/pstu/details_information.php</file>
+            <file>file:/C:/xampp/htdocs/pstu/details_teacher.php</file>
         </group>
     </open-files>
 </project-private>

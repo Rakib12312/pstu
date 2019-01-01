@@ -1,4 +1,20 @@
+
 <?php
+
+session_start();
+if(!isset($_SESSION['admin'])){
+    header("location:index.php");
+}
+include_once './header.php';
+
+
+include_once './database.php';
+if($_SESSION['admin']=="admin"){
+  
+}
+else{
+   
+}
 if (isset($_POST['form_course'])) {
 
     try {

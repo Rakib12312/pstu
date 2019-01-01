@@ -1,4 +1,19 @@
-<?php
+ <?php 
+
+session_start();
+if(!isset($_SESSION['admin'])){
+    header("location:index.php");
+}
+include_once './header.php';
+
+
+include_once './database.php';
+if($_SESSION['admin']=="admin"){
+  
+}
+else{
+   
+}
 if (isset($_POST['form_employee'])) {
 
     try {
@@ -27,7 +42,7 @@ if (isset($_POST['form_employee'])) {
             throw new Exception(" Employee Faculty  not be empty.");
         }
      
-         if (empty($_FILES['e_image'])) {
+         if (empty($_FILES['e_image_url'])) {
             throw new Exception("Employee image not be empty.");
         }
         
@@ -39,26 +54,32 @@ if (isset($_POST['form_employee'])) {
 //            $new_id = $row[10];
 
 
-        $target_dir = "/xampp/htdocs/pstu/uploads/";
-        $file_basename = basename($_FILES["e_image"]["name"]);
+    $file_basename = basename($_FILES["e_image_url"]["name"]);
         $file_ext = pathinfo($file_basename, PATHINFO_EXTENSION);
-        $up_filename = $file_basename . "." . $file_ext;
-//                $img_url = "http://192.168.43.197/admin/uploads/".$up_filename;
-
+        $t_name = strtolower(str_replace(" ","",$_POST['e_name']));
+        $up_filename = $t_name . "_" . get_millis() . "." . $file_ext;
+        $target_dir = dirname(__FILE__) . "/uploads/" . $up_filename;
+       $img_url = "http://agramonia.com/pstuian/uploads/".$up_filename;
+          
+      
         if (($file_ext != "png") && ($file_ext != "jpg") && ($file_ext != "jpeg") && ($file_ext != "gif"))
             throw new Exception("Only jpg, jpeg, png and gif format images are allowed to upload.");
 
-        move_uploaded_file($_FILES["e_image"]["tmp_name"], $target_dir . $up_filename);
+        move_uploaded_file($_FILES["e_image_url"]["tmp_name"], $target_dir . $file_basename);
 
 
-        $statement = $db->prepare("INSERT INTO employer (name, rank, department, contact, address, faculty, image) VALUES(?, ?, ?, ?, ?, ?, ?)");
-        $statement->execute(array($_POST['e_name'], $_POST['e_rank'], $_POST['e_department'],$_POST['e_contact'],$_POST['e_address'],$_POST['e_faculty'], $up_filename));
+        $statement = $db->prepare("INSERT INTO employee (name, designation, department, phone, address, faculty, image_url) VALUES(?, ?, ?, ?, ?, ?, ?)");
+        $statement->execute(array($_POST['e_name'], $_POST['e_rank'], $_POST['e_department'],$_POST['e_contact'],$_POST['e_address'],$_POST['e_faculty'], $img_url));
 
 
         $success_message = "Employee Added Successfully.";
     } catch (Exception $e) {
         $error_message = $e->getMessage();
     }
+}
+function get_millis(){
+  list($usec, $sec) = explode(' ', microtime());
+  return (int) ((int) $sec * 1000 + ((float) $usec * 1000));
 }
 ?>
 
@@ -95,7 +116,7 @@ if (isset($success_message)) {
                 </div>
 
                 <div class="form-group">
-                    <input type="file" name="e_image" class="form-control"/>
+                    <input type="file" name="e_image_url" class="form-control"/>
                 </div>
 
                 <div class="form-group">
